@@ -1,0 +1,83 @@
+@model IEnumerable<CategorieExercice>
+
+@{
+    ViewData["Title"] = "Catalogue d'exercices";
+}
+
+<div class="page-heading">
+    <span class="eyebrow">Catalogue</span>
+    <h1>Exercices et catégories</h1>
+    <p>Vue d'ensemble du contenu que les utilisateurs peuvent ajouter à leur routine.</p>
+</div>
+
+<div class="toolbar">
+    <a class="btn btn-primary" asp-action="CreateExoCat">Créer une catégorie</a>
+    <a class="btn btn-outline-light" asp-action="CreateExercice">Créer un exercice</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">Aucune catégorie n'a encore été créée.</div>
+}
+else
+{
+    <div class="catalog-grid">
+        @foreach (var categorie in Model)
+        {
+            <section class="fitness-card">
+                <div class="card-heading">
+                    <div>
+                        <span class="eyebrow">Groupe</span>
+                        <h2>@categorie.CategorieName</h2>
+                    </div>
+                    <div class="card-actions">
+                        <span class="counter">@categorie.Exercices.Count</span>
+                        <form asp-action="DeleteExoCat" method="post">
+                            <input type="hidden" name="id" value="@categorie.Id" />
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+
+                @if (!categorie.Exercices.Any())
+                {
+                    <p class="muted">Aucun exercice dans cette catégorie.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Exercice</th>
+                                    <th>Muscle</th>
+                                    <th>Perf.</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var exercice in categorie.Exercices.OrderBy(exercice => exercice.ExerciceName))
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@exercice.ExerciceName</strong>
+                                            <span>@exercice.Description</span>
+                                        </td>
+                                        <td>@exercice.MuscleTravaille</td>
+                                        <td>@exercice.MaxPerf kg</td>
+                                        <td class="text-end">
+                                            <form asp-action="DeleteExercice" method="post">
+                                                <input type="hidden" name="id" value="@exercice.Id" />
+                                                <button class="btn btn-sm btn-outline-danger" type="submit">Supprimer</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </section>
+        }
+    </div>
+}

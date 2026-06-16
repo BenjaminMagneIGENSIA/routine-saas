@@ -2,7 +2,23 @@
     ViewData["Title"] = "Page Administrateur";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome, page administrateur</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="page-heading">
+    <span class="eyebrow">Admin</span>
+    <h1>Espace administrateur</h1>
+    <p>Gère les catégories et les exercices disponibles dans le catalogue.</p>
+</div>
+
+<div class="action-grid">
+    <a class="action-tile" asp-controller="Admin" asp-action="ListExoCat">
+        <strong>Catalogue</strong>
+        <span>Lister les catégories et exercices.</span>
+    </a>
+    <a class="action-tile" asp-controller="Admin" asp-action="CreateExoCat">
+        <strong>Nouvelle catégorie</strong>
+        <span>Créer un groupe musculaire.</span>
+    </a>
+    <a class="action-tile" asp-controller="Admin" asp-action="CreateExercice">
+        <strong>Nouvel exercice</strong>
+        <span>Ajouter un exercice au catalogue.</span>
+    </a>
 </div>

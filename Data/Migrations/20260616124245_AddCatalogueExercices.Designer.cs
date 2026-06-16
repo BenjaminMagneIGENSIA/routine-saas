@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Routine_SaaS.Data;
 
@@ -10,9 +11,11 @@ using Routine_SaaS.Data;
 namespace Routine_SaaS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260616124245_AddCatalogueExercices")]
+    partial class AddCatalogueExercices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.8");
@@ -220,7 +223,6 @@ namespace Routine_SaaS.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CategorieName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -241,13 +243,12 @@ namespace Routine_SaaS.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ExerciceName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MaxPerf")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("MuscleTravaille")
+                    b.PrimitiveCollection<string>("MuscleTravaillé")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -255,65 +256,6 @@ namespace Routine_SaaS.Data.Migrations
                     b.HasIndex("CategorieExerciceId");
 
                     b.ToTable("Exercices");
-                });
-
-            modelBuilder.Entity("Routine_SaaS.Models.PerformanceEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("ChargeKg")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Commentaire")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DatePerformance")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ExerciceId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Repetitions")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExerciceId");
-
-                    b.ToTable("PerformanceEntries");
-                });
-
-            modelBuilder.Entity("Routine_SaaS.Models.RoutineEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ExerciceId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("JourSemaine")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExerciceId");
-
-                    b.ToTable("RoutineEntries");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -369,45 +311,14 @@ namespace Routine_SaaS.Data.Migrations
 
             modelBuilder.Entity("Routine_SaaS.Models.Exercice", b =>
                 {
-                    b.HasOne("Routine_SaaS.Models.CategorieExercice", "CategorieExercice")
-                        .WithMany("Exercices")
+                    b.HasOne("Routine_SaaS.Models.CategorieExercice", null)
+                        .WithMany("ExerList")
                         .HasForeignKey("CategorieExerciceId");
-
-                    b.Navigation("CategorieExercice");
-                });
-
-            modelBuilder.Entity("Routine_SaaS.Models.PerformanceEntry", b =>
-                {
-                    b.HasOne("Routine_SaaS.Models.Exercice", "Exercice")
-                        .WithMany("PerformanceEntries")
-                        .HasForeignKey("ExerciceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Exercice");
-                });
-
-            modelBuilder.Entity("Routine_SaaS.Models.RoutineEntry", b =>
-                {
-                    b.HasOne("Routine_SaaS.Models.Exercice", "Exercice")
-                        .WithMany("RoutineEntries")
-                        .HasForeignKey("ExerciceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Exercice");
                 });
 
             modelBuilder.Entity("Routine_SaaS.Models.CategorieExercice", b =>
                 {
-                    b.Navigation("Exercices");
-                });
-
-            modelBuilder.Entity("Routine_SaaS.Models.Exercice", b =>
-                {
-                    b.Navigation("PerformanceEntries");
-
-                    b.Navigation("RoutineEntries");
+                    b.Navigation("ExerList");
                 });
 #pragma warning restore 612, 618
         }

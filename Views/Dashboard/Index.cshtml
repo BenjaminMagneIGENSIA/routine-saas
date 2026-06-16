@@ -1,0 +1,191 @@
+@model Routine_SaaS.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-heading dashboard-heading">
+    <span class="eyebrow">Ma routine</span>
+    <h1>Programme ta semaine</h1>
+    <p>Choisis tes exercices, répartis-les par jour et note tes performances après chaque séance.</p>
+</div>
+
+<div class="stats-strip">
+    <div>
+        <span>@Model.Exercices.Count</span>
+        <strong>exercices</strong>
+    </div>
+    <div>
+        <span>@Model.RoutineEntries.Count</span>
+        <strong>séances prévues</strong>
+    </div>
+    <div>
+        <span>@Model.PerformanceEntries.Count</span>
+        <strong>performances récentes</strong>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <section class="fitness-card">
+        <div class="card-heading">
+            <div>
+                <span class="eyebrow">Planning</span>
+                <h2>Ajouter un exercice</h2>
+            </div>
+        </div>
+
+        @if (!Model.Exercices.Any())
+        {
+            <p class="muted">Aucun exercice n'est disponible. Un administrateur doit d'abord remplir le catalogue.</p>
+        }
+        else
+        {
+            <form asp-action="AddRoutineEntry" method="post" class="stacked-form">
+                <label class="form-label" for="JourSemaine">Jour</label>
+                <select id="JourSemaine" name="JourSemaine" class="form-select">
+                    @foreach (var jour in Model.JoursSemaine)
+                    {
+                        <option value="@jour">@jour</option>
+                    }
+                </select>
+
+                <label class="form-label" for="ExerciceId">Exercice</label>
+                <select id="ExerciceId" name="ExerciceId" class="form-select">
+                    @foreach (var exercice in Model.Exercices)
+                    {
+                        <option value="@exercice.Id">@exercice.ExerciceName</option>
+                    }
+                </select>
+
+                <label class="form-label" for="Notes">Notes</label>
+                <input id="Notes" name="Notes" class="form-control" placeholder="Ex : 4 séries de 10" />
+
+                <button class="btn btn-primary" type="submit">Ajouter au planning</button>
+            </form>
+        }
+    </section>
+
+    <section class="fitness-card">
+        <div class="card-heading">
+            <div>
+                <span class="eyebrow">Progression</span>
+                <h2>Noter une performance</h2>
+            </div>
+        </div>
+
+        @if (!Model.Exercices.Any())
+        {
+            <p class="muted">Ajoute d'abord des exercices au catalogue.</p>
+        }
+        else
+        {
+            <form asp-action="AddPerformance" method="post" class="stacked-form">
+                <label class="form-label" for="PerformanceExerciceId">Exercice</label>
+                <select id="PerformanceExerciceId" name="ExerciceId" class="form-select">
+                    @foreach (var exercice in Model.Exercices)
+                    {
+                        <option value="@exercice.Id">@exercice.ExerciceName</option>
+                    }
+                </select>
+
+                <div class="form-two-cols">
+                    <div>
+                        <label class="form-label" for="ChargeKg">Charge</label>
+                        <input id="ChargeKg" name="ChargeKg" class="form-control" type="number" min="0" step="0.5" value="0" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="Repetitions">Répétitions</label>
+                        <input id="Repetitions" name="Repetitions" class="form-control" type="number" min="0" value="0" />
+                    </div>
+                </div>
+
+                <label class="form-label" for="DatePerformance">Date</label>
+                <input id="DatePerformance" name="DatePerformance" class="form-control" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+
+                <label class="form-label" for="Commentaire">Commentaire</label>
+                <input id="Commentaire" name="Commentaire" class="form-control" placeholder="Ex : bonne sensation" />
+
+                <button class="btn btn-primary" type="submit">Enregistrer</button>
+            </form>
+        }
+    </section>
+</div>
+
+<section class="week-board">
+    @foreach (var jour in Model.JoursSemaine)
+    {
+        var entries = Model.RoutineEntries
+            .Where(entry => entry.JourSemaine == jour)
+            .OrderBy(entry => entry.Exercice!.ExerciceName)
+            .ToList();
+
+        <article class="day-column">
+            <h2>@jour</h2>
+
+            @if (!entries.Any())
+            {
+                <p class="muted">Repos ou séance à préparer.</p>
+            }
+            else
+            {
+                @foreach (var entry in entries)
+                {
+                    <div class="routine-item">
+                        <strong>@entry.Exercice?.ExerciceName</strong>
+                        <span>@entry.Exercice?.CategorieExercice?.CategorieName</span>
+                        @if (!string.IsNullOrWhiteSpace(entry.Notes))
+                        {
+                            <em>@entry.Notes</em>
+                        }
+                        <form asp-action="DeleteRoutineEntry" method="post">
+                            <input type="hidden" name="id" value="@entry.Id" />
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Retirer</button>
+                        </form>
+                    </div>
+                }
+            }
+        </article>
+    }
+</section>
+
+<section class="fitness-card">
+    <div class="card-heading">
+        <div>
+            <span class="eyebrow">Historique</span>
+            <h2>Dernières performances</h2>
+        </div>
+    </div>
+
+    @if (!Model.PerformanceEntries.Any())
+    {
+        <p class="muted">Aucune performance enregistrée pour le moment.</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Exercice</th>
+                        <th>Charge</th>
+                        <th>Répétitions</th>
+                        <th>Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var performance in Model.PerformanceEntries)
+                    {
+                        <tr>
+                            <td>@performance.DatePerformance.ToString("dd/MM/yyyy")</td>
+                            <td>@performance.Exercice?.ExerciceName</td>
+                            <td>@performance.ChargeKg kg</td>
+                            <td>@performance.Repetitions</td>
+                            <td>@performance.Commentaire</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>

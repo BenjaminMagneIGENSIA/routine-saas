@@ -1,0 +1,55 @@
+@model Exercice
+
+@{
+    ViewData["Title"] = "Créer un exercice";
+}
+
+<div class="page-heading">
+    <span class="eyebrow">Admin</span>
+    <h1>Créer un exercice</h1>
+    <p>Ajoute un exercice au catalogue pour que les utilisateurs puissent le programmer.</p>
+</div>
+
+<form asp-action="CreateExercice" method="post" class="fitness-form">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label asp-for="ExerciceName" class="form-label"></label>
+            <input asp-for="ExerciceName" class="form-control" />
+            <span asp-validation-for="ExerciceName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="CategorieExerciceId" class="form-label"></label>
+            <select asp-for="CategorieExerciceId" asp-items="ViewBag.Categories" class="form-select">
+                <option value="">Choisir une catégorie</option>
+            </select>
+            <span asp-validation-for="CategorieExerciceId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="MuscleTravaille" class="form-label"></label>
+            <input asp-for="MuscleTravaille" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="MaxPerf" class="form-label"></label>
+            <input asp-for="MaxPerf" class="form-control" type="number" min="0" />
+        </div>
+
+        <div class="col-12">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Créer</button>
+        <a class="btn btn-outline-light" asp-action="ListExoCat">Annuler</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,8 +1,46 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Accueil";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="home-hero">
+    <div>
+        <span class="eyebrow">Routine_SaaS</span>
+        <h1>Planifie ta semaine, suis tes charges, garde le rythme.</h1>
+        <p>Une application simple pour construire une routine de musculation avec des exercices classés par groupe musculaire.</p>
+        <div class="hero-actions">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a class="btn btn-primary btn-lg" asp-controller="Dashboard" asp-action="Index">Ouvrir mon dashboard</a>
+            }
+            else
+            {
+                <a class="btn btn-primary btn-lg" asp-area="Identity" asp-page="/Account/Register">Créer un compte</a>
+                <a class="btn btn-outline-light btn-lg" asp-area="Identity" asp-page="/Account/Login">Se connecter</a>
+            }
+        </div>
+    </div>
+    <div class="hero-panel">
+        <strong>Objectif MVP</strong>
+        <span>Catalogue d'exercices</span>
+        <span>Planning semaine</span>
+        <span>Suivi des performances</span>
+    </div>
+</section>
+
+<section class="feature-strip">
+    <article>
+        <strong>1</strong>
+        <h2>Choisis</h2>
+        <p>Les exercices sont organisés par groupe musculaire.</p>
+    </article>
+    <article>
+        <strong>2</strong>
+        <h2>Programme</h2>
+        <p>Ajoute les exercices aux jours de ta semaine.</p>
+    </article>
+    <article>
+        <strong>3</strong>
+        <h2>Progresse</h2>
+        <p>Note tes charges et répétitions après tes séances.</p>
+    </article>
+</section>

@@ -21,6 +21,13 @@ var app = builder.Build();
 //Appelle la seed des rôles :
 await SeedRoles.InitializeAsync(app.Services);
 
+using (var scope = app.Services.CreateScope())
+{
+    // On ajoute quelques exercices de démonstration pour avoir une application présentable au lancement.
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await SeedData.InitializeAsync(context);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

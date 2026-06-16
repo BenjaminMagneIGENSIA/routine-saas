@@ -11,6 +11,9 @@ Un utilisateur authentifié peut programmer sa semaine de musculation avec des e
 - Début du catalogue d'exercices avec modèles `CategorieExercice` et `Exercice`.
 - Espace administrateur protégé pour lister, créer et supprimer des catégories d'exercices.
 
+## Fonctionnalité manquante :
+- L'ajout d'un exercice depuis le dashboard ne s'affiche pas encore correctement dans les jours de la semaine.
+
 ## Découpage du projet :
 ### 1 - Authentification :
 - Inscription

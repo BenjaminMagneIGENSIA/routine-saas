@@ -1,0 +1,30 @@
+@model CategorieExercice
+
+@{
+    ViewData["Title"] = "Créer une catégorie";
+}
+
+<div class="page-heading">
+    <span class="eyebrow">Admin</span>
+    <h1>Créer une catégorie</h1>
+    <p>Ajoute un groupe musculaire au catalogue, par exemple Jambes, Dos ou Pectoraux.</p>
+</div>
+
+<form asp-action="CreateExoCat" method="post" class="fitness-form">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="CategorieName" class="form-label"></label>
+        <input asp-for="CategorieName" class="form-control" placeholder="Ex : Épaules" />
+        <span asp-validation-for="CategorieName" class="text-danger"></span>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Créer</button>
+        <a class="btn btn-outline-light" asp-action="ListExoCat">Annuler</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
